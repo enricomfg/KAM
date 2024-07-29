@@ -16,6 +16,17 @@ class CfgWeapons {
             mass = 1;
         };
     };
+    class kat_nasal: ACE_ItemCore {
+        scope = 2;
+        author = "apo_tle";
+        displayName= CSTRING(NasalCannula_Display);
+        descriptionShort = CSTRING(NasalCannula_Desc_Short);
+        picture = QPATHTOF(ui\nasalcannula.paa);
+        ACE_isMedicalItem = 1;
+        class ItemInfo: CBA_MiscItem_ItemInfo {
+            mass = 0.5;
+        };
+    };
     class kat_chestSeal: ACE_ItemCore {
         scope = 2;
         scopeCurator = 2;
@@ -36,7 +47,10 @@ class CfgWeapons {
         author = "Kygan";
         displayName = CSTRING(aatKit_display);
         descriptionShort = CSTRING(aatKit_desc);
+        model = QPATHTOF(models\AAT_Kit\AAT.p3d);
         picture = QPATHTOF(ui\surgical_airway_kit.paa);
+        hiddenSelections[]={"Content"};
+        hiddenSelectionsTextures[] = {QPATHTOF(models\AAT_Kit\AAT_ca.paa)};
         ACE_isMedicalItem = 1;
         class ItemInfo: CBA_MiscItem_ItemInfo {
             mass = 5;
@@ -71,6 +85,8 @@ class CfgWeapons {
 
     class kat_BVM: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(BVM_Display);
         descriptionShort = CSTRING(BVM_Desc_Short);
@@ -82,6 +98,8 @@ class CfgWeapons {
     };
     class kat_pocketBVM: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(PocketBVM_Display);
         descriptionShort = CSTRING(PocketBVM_Desc_Short);
@@ -93,6 +111,8 @@ class CfgWeapons {
     };
     class kat_oxygenTank_150_Item: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(PortableOxygenTank_150_Display);
         descriptionShort = CSTRING(PortableOxygenTank_150_Desc_Short);
@@ -104,6 +124,8 @@ class CfgWeapons {
     };
     class kat_oxygenTank_300_Item: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(PortableOxygenTank_300_Display);
         descriptionShort = CSTRING(PortableOxygenTank_300_Desc_Short);
@@ -115,6 +137,8 @@ class CfgWeapons {
     };
     class kat_oxygenTank_150_Empty: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(PortableOxygenTank_150_Empty_Display);
         descriptionShort = CSTRING(PortableOxygenTank_Empty_Desc_Short);
@@ -126,6 +150,8 @@ class CfgWeapons {
     };
     class kat_oxygenTank_300_Empty: ACE_ItemCore {
         scope = 2;
+        scopeCurator = 2;
+        scopeArsenal = 2;
         author = "Blue";
         displayName = CSTRING(PortableOxygenTank_300_Empty_Display);
         descriptionShort = CSTRING(PortableOxygenTank_Empty_Desc_Short);

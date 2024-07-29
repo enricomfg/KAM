@@ -1,4 +1,3 @@
-#include "script_component.hpp"
 class RscText;
 class RscButton;
 class RscPicture;
@@ -46,6 +45,11 @@ class ACEGVAR(medical_gui,BodyImage): RscControlsGroupNoScrollbars {
         class Head_KingLT: Head_GuedelTube {
             idc = IDC_BODY_HEAD_KINGLT;
             text = QPATHTOF(data\body_image\head_kinglt.paa);
+        };
+        class Head_NasalCannula: Torso_ChestSeal {
+            idc = IDC_BODY_HEAD_NASAL;
+            text = QPATHTOF(data\body_image\head_nasalcannula.paa);
+            colorText[] = {0.18, 0.6, 0.96, 1};
         };
         class RightArm_PulseOximeter: Background {
             idc = IDC_BODY_RIGHTARM_PULSEOX;
@@ -109,9 +113,6 @@ class ACE_Medical_Menu {
             text = QPATHTOF(data\categories\plate.paa);
             tooltip = "Surgery";
             x = QUOTE(POS_X(13.5));
-        };
-        class Toggle: Triage {
-            tooltip = ACECSTRING(medical_gui,ToggleSelf);
         };
         class TriageCard: RscListBox {
             h = QUOTE(POS_H(12.2));

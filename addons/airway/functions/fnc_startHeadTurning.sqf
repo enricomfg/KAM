@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Begin head turning
@@ -31,7 +31,7 @@ GVAR(HeadTurnCancel_MouseID) = [0xF0, [false, false, false], {
 }, "keydown", "", false, 0] call CBA_fnc_addKeyHandler;
 
 ACEGVAR(medical_gui,pendingReopen) = false; // Prevent medical menu from reopening
- 
+
 if (dialog) then { // If another dialog is open (medical menu) close it
     closeDialog 0;
 };
@@ -53,11 +53,18 @@ GVAR(headTurn_timeOut) = true;
     params ["_medic", "_patient", "_notInVehicle"];
 
     [LLSTRING(headTurning_stop), "", ""] call ACEFUNC(interaction,showMouseHint);
+    [LLSTRING(headTurning_start), 1.5, _medic] call ACEFUNC(common,displayTextStructured);
+
     [{
         params ["_args", "_idPFH"];
         _args params ["_medic", "_patient", "_notInVehicle"];
 
-        if (!(alive _medic) || IS_UNCONSCIOUS(_medic) || !(IS_UNCONSCIOUS(_patient)) || !(_patient getVariable [QGVAR(headTurningActive), false]) || dialog || {!(objectParent _medic isEqualTo objectParent _patient) || {_patient distance2D _medic > ACEGVAR(medical_gui,maxDistance)}}) exitWith {
+        private _patientCondition = (!(IS_UNCONSCIOUS(_patient)) && alive _patient || _patient isEqualTo objNull);
+        private _medicCondition = (!(alive _medic) || IS_UNCONSCIOUS(_medic) || _medic isEqualTo objNull);
+        private _vehicleCondition = !(objectParent _medic isEqualTo objectParent _patient);
+        private _distanceCondition = (_patient distance2D _medic > ACEGVAR(medical_gui,maxDistance));
+
+        if (_patientCondition || _medicCondition || !(_patient getVariable [QGVAR(headTurningActive), false]) || dialog || {(!_notInVehicle && _vehicleCondition) || {(_notInVehicle && _distanceCondition)}}) exitWith {
             [_idPFH] call CBA_fnc_removePerFrameHandler;
 
             [] call ACEFUNC(interaction,hideMouseHint);
@@ -83,7 +90,7 @@ GVAR(headTurn_timeOut) = true;
                 params ["_patient"];
 
                 !(_patient getVariable [QGVAR(headTurningActive), false]);
-            }, {}, [_patient, _medic], GVAR(HeadTurn_Interval), 
+            }, {}, [_patient, _medic], GVAR(HeadTurn_Interval),
             {
                 params ["_patient", "_medic"];
 
@@ -106,7 +113,7 @@ GVAR(headTurn_timeOut) = true;
 
             }] call CBA_fnc_waitUntilAndExecute;
         };
-        
+
         if (GVAR(loopHeadturning)) then {
             [QACEGVAR(common,switchMove), [_medic, "kat_headTurn"]] call CBA_fnc_globalEvent;
             GVAR(loopHeadturning) = false;

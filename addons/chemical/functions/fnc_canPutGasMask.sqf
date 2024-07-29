@@ -1,7 +1,7 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: DiGii
- * 
+ *
  * Arguments:
  * 0: Caller <OBJECT>
  * 1: Target <OBJECT>
@@ -17,6 +17,6 @@
 
 params ["_medic", "_patient"];
 
-if(missionNamespace getVariable [QGVAR(availGasmaskList), []] isEqualTo []) exitWith {false};
+if (missionNamespace getVariable [QGVAR(availGasmaskList), []] isEqualTo []) exitWith {false};
 
-!(_patient call ACE_common_fnc_isAwake) && ([_medic,_patient] call FUNC(hasGasmask)) && !((goggles _patient) in (missionNamespace getVariable [QGVAR(availGasmaskList), []]))
+!(_patient call ACE_common_fnc_isAwake) && ([_medic, _patient] call FUNC(hasGasmask)) && !((goggles _patient) in (missionNamespace getVariable [QGVAR(availGasmaskList), []]))

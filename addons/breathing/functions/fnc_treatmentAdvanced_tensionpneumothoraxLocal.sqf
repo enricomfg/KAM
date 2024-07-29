@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Kygan, modified by YetheSamartaka and Tomcat.
  * Treatment for tension pneumothorax
@@ -22,6 +22,10 @@ params ["_medic", "_patient"];
 if (_patient getVariable [QGVAR(activeChestSeal), false]) then {
     _patient setVariable [QGVAR(tensionpneumothorax), false, true];
 };
+
+private _ht = _patient getVariable [QEGVAR(circulation,ht), []];
+_ht deleteAt (_ht find "tension");
+_patient setVariable [QEGVAR(circulation,ht), _ht, true];
 
 if (!(_patient getVariable [QGVAR(pneumothorax), 0] > 0) && !(_patient getVariable [QGVAR(hemopneumothorax), false]) && !(_patient getVariable [QGVAR(tensionpneumothorax), false])) then {
     [_patient, 0, 0, "ptx_tension", true] call EFUNC(circulation,updateBloodPressureChange);

@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: MiszczuZPolski
  * Set patient into recovery position preventing further airway occlusion.
@@ -11,7 +11,7 @@
  * None
  *
  * Example:
- * [player, cursorTarget] call kat_airway_fnc_RecoveryPosition
+ * [player, cursorTarget] call kat_airway_fnc_treatmentAdvanced_RecoveryPosition;
  *
  * Public: No
  */

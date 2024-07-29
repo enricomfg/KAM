@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Glowbal
  * Modified: Tomcat, Blue
@@ -32,9 +32,9 @@ private _fnc_advRhythm = {
     params ["_patient", ["_CPR",false]];
 
     private _patientState = _patient getVariable [QGVAR(cardiacArrestType), 0];
-    
+
     if (_CPR) then {
-        if (floor (random 100) <= GVAR(AdvRhythm_CPR_ROSC_Chance)) then {
+        if (floor (random 100) < GVAR(AdvRhythm_CPR_ROSC_Chance)) then {
             _patient setVariable [QGVAR(cardiacArrestType), 0, true];
         } else {
             if (_patient getVariable [QGVAR(cardiacArrestType), 0] isEqualTo 1) then {
@@ -49,7 +49,7 @@ private _fnc_advRhythm = {
         };
     } else {
         if (_patientState > 2) then {
-            if (floor (random 100) <= GVAR(AdvRhythm_AED_ROSC_Chance) || _patientState isEqualTo 4) then {
+            if (floor (random 100) < GVAR(AdvRhythm_AED_ROSC_Chance) || _patientState isEqualTo 4) then {
                 _patient setVariable [QGVAR(cardiacArrestType), 0, true];
             } else {
                 _patient setVariable [QGVAR(cardiacArrestType), 4, true];
@@ -71,11 +71,11 @@ private _fnc_advRhythm = {
 
     switch(_medication) do
     {
-        case "Epinephrine": 
+        case "Epinephrine":
         {
             _epiBoost = 1.5;
         };
-        case "Amiodarone": 
+        case "Amiodarone":
         {
             _amiBoost = _amiBoost + (random [8,14,20]);
         };
@@ -124,13 +124,8 @@ if (_reviveObject in ["AED", "AEDX"]) exitWith {
             };
             _patient setVariable [QGVAR(cprCount), 2, true];
         } else {
-            if (GVAR(AdvRhythm_Hardcore_Enable) && _patientState < 3) then {
-                if (floor (random 100) < GVAR(AdvRhythm_PEAChance)) then {
-                    _patient setVariable [QGVAR(cardiacArrestType), 2, true];
-                    [_patient, nil, false] call FUNC(handleCardiacArrest);
-                } else {
-                    _patient setVariable [QGVAR(cardiacArrestType), 1, true];
-                };
+            if (GVAR(AdvRhythm_Hardcore_Enable) && _patientState == 2) then {
+                _patient setVariable [QGVAR(cardiacArrestType), 1, true];
             };
         };
     } else {

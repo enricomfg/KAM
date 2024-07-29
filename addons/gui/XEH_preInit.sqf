@@ -18,36 +18,6 @@ PREP_RECOMPILE_END;
     true
 ] call CBA_Settings_fnc_init;
 
-// Show inactive patient statuses
-[
-    QGVAR(showInactiveStatuses),
-    "CHECKBOX",
-    LLSTRING(SETTING_showInactiveStatuses),
-    [CBA_SETTINGS_CAT, LSTRING(SubCategory_Basic)],
-    [false],
-    true
-] call CBA_Settings_fnc_init;
-
-// Display bleed rate (slow/moderate/severe/massive)
-[
-    QGVAR(showBleedRate),
-    "CHECKBOX",
-    [LLSTRING(SETTING_showBleedRate), LLSTRING(SETTING_showBleedRate_DESC)],
-    [CBA_SETTINGS_CAT, LSTRING(SubCategory_Basic)],
-    [false],
-    true
-] call CBA_Settings_fnc_init;
-
-// Overlay selected body part in medical menu
-[
-    QGVAR(overlayBodyPart),
-    "CHECKBOX",
-    LLSTRING(SETTING_overlayBodyPart),
-    [CBA_SETTINGS_CAT, LSTRING(SubCategory_Basic)],
-    [false],
-    false
-] call CBA_Settings_fnc_init;
-
 // Label left and right in medical menu
 [
     QGVAR(showPatientSideLabels),
@@ -96,7 +66,7 @@ private _damageColors = [
     [0.00, 0.00, 1.00, 1]
 ];
 
-private _categoryColors = [ACELSTRING(medical,Category), format ["| %1 |", ACELLSTRING(common,subcategory_colors)]];
+private _categoryColors = [ACELSTRING(medical,Interface_Category), format ["| %1 |", ACELLSTRING(common,subcategory_colors)]];
 {
     [
         format ["%1_%2", QACEGVAR(medical_gui,bloodLossColor), _forEachIndex],

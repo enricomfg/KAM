@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Inspect chest for injuries
@@ -23,7 +23,7 @@ private _messageLog = LLSTRING(inspectChest_normal);
 
 private _hasPneumothorax = (_patient getVariable [QGVAR(pneumothorax), 0] > 0 || _patient getVariable [QGVAR(tensionpneumothorax), false] || _patient getVariable [QGVAR(hemopneumothorax), false]);
 private _airwaySecure = (_patient getVariable [QEGVAR(airway,airway), false] && !(_patient getVariable [QEGVAR(airway,occluded), false]));
-private _airwayClear = (!(_patient getVariable [QEGVAR(airway,obstruction), false]) && !(_patient getVariable [QEGVAR(airway,occluded), false]));
+private _airwayClear = (!(_patient getVariable [QEGVAR(airway,obstruction), false]) || (_patient getVariable [QEGVAR(airway,obstruction), false] && _patient getVariable [QEGVAR(airway,overstretch), false])) && !(_patient getVariable [QEGVAR(airway,occluded), false]);
 private _simpleSetting = (GVAR(inspectChest_enable) == 1);
 private _hintSize = 1.5;
 private _hintWidth = 10;
@@ -86,6 +86,7 @@ if (GET_HEART_RATE(_patient) isEqualTo 0) then {
     };
 };
 
+[_patient, "quick_view", LSTRING(inspectChest_log)] call EFUNC(circulation,removeLog);
 [_patient, "quick_view", LSTRING(inspectChest_log), [[_medic] call ACEFUNC(common,getName), _messageLog]] call ACEFUNC(medical_treatment,addToLog);
 
 if (_patient getVariable [QGVAR(hemopneumothorax), false] && {!_simpleSetting}) then {

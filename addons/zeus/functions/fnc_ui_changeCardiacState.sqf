@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: DiGi, Blue
  * Initalizes the "Change Cardiac State" Zeus module.
@@ -15,13 +15,13 @@
  * Public: No
  */
 
-params ["_control"]; 
+params ["_control"];
 
 private _display = ctrlParent _control;
 private _ctrlButtonOK = _display displayCtrl 1;
 private _logic = GETMVAR(BIS_fnc_initCuratorAttributes_target,objNull);
 
-_control ctrlRemoveAllEventHandlers "setFocus";
+_control ctrlRemoveAllEventHandlers "SetFocus";
 
 
 private _unit = attachedTo _logic;
@@ -66,15 +66,17 @@ private _fnc_onConfirm = {
     private _currentState = _unit getVariable [QEGVAR(circulation,cardiacArrestType), 0];
 
     private _state = lbCurSel (_display displayCtrl 16112);
+
+    _unit setVariable [QEGVAR(circulation,cardiacArrestType), _state, true];
+
     if (_state isEqualTo 0) then {
-        [QACEGVAR(medical,CPRSucceeded), _unit] call CBA_fnc_localEvent;
+        [QACEGVAR(medical,CPRSucceeded), [_unit], _unit] call CBA_fnc_targetEvent;
     } else {
         if (_state > 0 && _currentState isEqualTo 0) then {
-            [QACEGVAR(medical,FatalVitals), _unit] call CBA_fnc_localEvent;
+            [QACEGVAR(medical,FatalVitals), [_unit], _unit] call CBA_fnc_targetEvent;
         };
     };
-    _unit setVariable [QEGVAR(circulation,cardiacArrestType), _state, true];
 };
 
-_display displayAddEventHandler ["unload", _fnc_onUnload];
-_ctrlButtonOK ctrlAddEventHandler ["buttonclick", _fnc_onConfirm];
+_display displayAddEventHandler ["Unload", _fnc_onUnload];
+_ctrlButtonOK ctrlAddEventHandler ["ButtonClick", _fnc_onConfirm];

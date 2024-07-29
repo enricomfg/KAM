@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
 * Author: DiGii
 *
@@ -16,4 +16,5 @@
 * Creates effects when Trip wire explodes.
 * Cant be called manualy!
 */
+
 [FUNC(spawnSmoke), _this] call CBA_fnc_directcall;

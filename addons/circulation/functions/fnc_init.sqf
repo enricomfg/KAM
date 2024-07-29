@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Katalam
  * Initializes unit variables.
@@ -15,6 +15,8 @@
  * Public: No
  */
 
-params ["_unit"];
+params ["_unit", ["_isRespawn", true]];
 
-_unit setVariable [QGVAR(cprCount), 2, true];
+if (!local _unit) exitWith {};
+
+[_unit] call FUNC(fullHealLocal);

@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Handles finishing AED shock procedure.
@@ -26,6 +26,10 @@ _bystanders = _bystanders - [_medic];
     [QGVAR(handleNearToAED), [_x, _patient], _x] call CBA_fnc_targetEvent;
 } forEach _bystanders;
 
+if (_patient getVariable [QACEGVAR(medical,CPR_provider), objNull] != objNull) then {
+    [(_patient getVariable QACEGVAR(medical,CPR_provider)), 0.4] call ACEFUNC(medical_status,adjustPainLevel);
+};
+
 _patient setVariable [QGVAR(heartRestart), true, true];
 _patient setVariable [QGVAR(RhythmAnalyzed), false, true];
 
@@ -33,7 +37,7 @@ _patient setVariable [QGVAR(RhythmAnalyzed), false, true];
     params ["_patient"];
 
     _patient setVariable [QGVAR(heartRestart), false, true];
-}, [_patient], 2] call CBA_fnc_waitAndExecute;
+}, [_patient], 4] call CBA_fnc_waitAndExecute;
 
 [{
     params ["_patient"];
@@ -43,6 +47,12 @@ _patient setVariable [QGVAR(RhythmAnalyzed), false, true];
 
 _patient setVariable [QGVAR(Defibrillator_ShockAmount), (_patient getVariable [QGVAR(Defibrillator_ShockAmount), 0]) + 1, true];
 
-if (alive _patient && {_patient getVariable [QACEGVAR(medical,inCardiacArrest), false]}) then {
-    [QACEGVAR(medical_treatment,cprLocal), [_medic, _patient, _defibType], _patient] call CBA_fnc_targetEvent;
+if (alive _patient) then {
+    if (IN_CRDC_ARRST(_patient)) then {
+        [QACEGVAR(medical_treatment,cprLocal), [_medic, _patient, _defibType], _patient] call CBA_fnc_targetEvent;
+    } else {
+        if (GVAR(AdvRhythm) && GVAR(AdvRhythm_Hardcore_Enable)) then {
+            [QGVAR(incorrectAEDUsage), _patient, _patient] call CBA_fnc_targetEvent;
+        }; 
+    };
 };

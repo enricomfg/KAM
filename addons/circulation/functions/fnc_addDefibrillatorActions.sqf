@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Gets ACE actions for units next to placed defibrillator
@@ -38,7 +38,7 @@ switch (_type) do { // AED-X pads
                     params ["_medic", "", "_args"];
                     _args params ["_patient", "_defibObject"];
 
-                    [_medic, _patient, "body", "AEDXStationPlacePads", [_defibObject]] call EFUNC(misc,canTreat);
+                    [_medic, _patient, "body", "AEDXStationPlacePads", [_defibObject]] call ACEFUNC(medical_treatment,canTreat);
                 },
                 {},
                 [_x, _defibObject]
@@ -59,7 +59,7 @@ switch (_type) do { // AED-X pads
                     [_medic, _patient, "rightarm", "AEDXStationConnectVitalsMonitor", [_defibObject]] call EFUNC(misc,treatment);
                 },
                 {
-                    [_medic, _patient, "rightarm", "AEDXStationConnectVitalsMonitor", [_defibObject]] call EFUNC(misc,canTreat);
+                    [_medic, _patient, "rightarm", "AEDXStationConnectVitalsMonitor", [_defibObject]] call ACEFUNC(medical_treatment,canTreat);
                 },
                 {
                     params ["_medic", "", "_args"];
@@ -163,7 +163,7 @@ switch (_type) do { // AED-X pads
                     params ["_medic", "", "_args"];
                     _args params ["_patient", "_defibObject"];
 
-                    [_medic, _patient, "body", "AEDStationPlacePads", [_defibObject]] call EFUNC(misc,canTreat);
+                    [_medic, _patient, "body", "AEDStationPlacePads", [_defibObject]] call ACEFUNC(medical_treatment,canTreat);
                 },
                 {},
                 [_x, _defibObject]

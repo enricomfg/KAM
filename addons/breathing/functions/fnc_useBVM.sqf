@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Handles BVM usage.
@@ -37,31 +37,38 @@ GVAR(CPRCancel_MouseID) = [0xF0, [false, false, false], {
 }, "keydown", "", false, 0] call CBA_fnc_addKeyHandler;
 
 ACEGVAR(medical_gui,pendingReopen) = false; // Prevent medical menu from reopening
- 
+
 if (dialog) then { // If another dialog is open (medical menu) close it
     closeDialog 0;
 };
 
 private _notInVehicle = isNull objectParent _medic;
 totalProvided = 1;
-loopBVM = false;
+GVAR(BVM_loop) = false;
 
 if (_notInVehicle) then {
     [_medic, "AinvPknlMstpSnonWnonDnon_AinvPknlMstpSnonWnonDnon_medic", 1] call ACEFUNC(common,doAnimation);
-    loopBVM = true;
+    GVAR(BVM_loop) = true;
 };
 
-timeOut = true;
+GVAR(BVM_timeOut) = true;
 
 [{
     params ["_medic", "_patient", "_pocket", "_useOxygen", "_oxygenOrigin", "_notInVehicle"];
 
     [LLSTRING(UseBVM_PutAway), "", ""] call ACEFUNC(interaction,showMouseHint);
+    [LLSTRING(UseBVM_Start), 1.5, _medic] call ACEFUNC(common,displayTextStructured);
+
     [{
         params ["_args", "_idPFH"];
         _args params ["_medic", "_patient", "_pocket", "_useOxygen", "_oxygenOrigin", "_notInVehicle"];
 
-        if (!(alive _medic) || IS_UNCONSCIOUS(_medic) || !(IS_UNCONSCIOUS(_patient)) || !(_patient getVariable [QGVAR(BVMInUse), false]) || dialog || {!(objectParent _medic isEqualTo objectParent _patient) || {_patient distance2D _medic > ACEGVAR(medical_gui,maxDistance)}}) exitWith {
+        private _patientCondition = (!(IS_UNCONSCIOUS(_patient)) && alive _patient || _patient isEqualTo objNull);
+        private _medicCondition = (!(alive _medic) || IS_UNCONSCIOUS(_medic) || _medic isEqualTo objNull);
+        private _vehicleCondition = !(objectParent _medic isEqualTo objectParent _patient);
+        private _distanceCondition = (_patient distance2D _medic > ACEGVAR(medical_gui,maxDistance));
+
+        if (_patientCondition || _medicCondition || !(_patient getVariable [QGVAR(BVMInUse), false]) || dialog || {(!_notInVehicle && _vehicleCondition) || {(_notInVehicle && _distanceCondition)}}) exitWith {
             [_idPFH] call CBA_fnc_removePerFrameHandler;
 
             _patient setVariable [QGVAR(BVMInUse), false, true];
@@ -94,9 +101,9 @@ timeOut = true;
             [LLSTRING(UseBVM_Cancelled), 1.5, _medic] call ACEFUNC(common,displayTextStructured);
         };
 
-        if !(timeOut) then {
-            timeOut = true;
-            
+        if !(GVAR(BVM_timeOut)) then {
+            GVAR(BVM_timeOut) = true;
+
             if (_useOxygen && !_pocket) then {
                 switch (_oxygenOrigin) do {
                     case 1: { // Medic provided oxygen with carried oxygen tank
@@ -158,7 +165,7 @@ timeOut = true;
                             _tank params ["_tankClassName", "_oxygenLeft"];
 
                             if (_oxygenLeft > 1) then {
-                                [_vehicle, _tankClassName, true] call EFUNC(misc,removeItemFromVehicle);
+                                [_vehicle, _tankClassName] call ACEFUNC(common,adjustMagazineAmmo);
                             } else {
                                 _vehicle addItemCargoGlobal [[_tankClassName,"Empty"] joinString "_", 1];
                                 [LLSTRING(PortableOxygenTankDisconnected_Empty), 1.5, _medic] call ACEFUNC(common,displayTextStructured);
@@ -181,25 +188,25 @@ timeOut = true;
                 params ["_patient"];
 
                 !(_patient getVariable [QGVAR(BVMInUse), false]);
-            }, {}, [_patient], 5, 
+            }, {}, [_patient], 5,
             {
-                timeOut = false;
+                GVAR(BVM_timeOut) = false;
                 totalProvided = totalProvided + 1;
             }] call CBA_fnc_waitUntilAndExecute;
         };
-        
-        if (loopBVM) then {
+
+        if (GVAR(BVM_loop)) then {
             [QACEGVAR(common,switchMove), [_medic, "kat_BVM"]] call CBA_fnc_globalEvent;
-            loopBVM = false;
+            GVAR(BVM_loop) = false;
 
             [{
                 params ["_patient"];
                 !(_patient getVariable [QGVAR(BVMInUse), false]);
             }, {}, [_patient], 9, {
-                loopBVM = true;
+                GVAR(BVM_loop) = true;
             }] call CBA_fnc_waitUntilAndExecute;
         };
     }, 0, [_medic, _patient, _pocket, _useOxygen, _oxygenOrigin, _notInVehicle]] call CBA_fnc_addPerFrameHandler;
 
-    [{timeOut = false;}, [], 1] call CBA_fnc_waitAndExecute;
+    [{GVAR(BVM_timeOut) = false;}, [], 1] call CBA_fnc_waitAndExecute;
 }, [_medic, _patient, _pocket, _useOxygen, _oxygenOrigin, _notInVehicle], 2] call CBA_fnc_waitAndExecute;

@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Attach Defibrillator pads to patient.
@@ -23,6 +23,8 @@
 
 params ["_medic", "_patient", "_source", "_defibClassname", ["_extraArgs",[]], ["_noLog", false]];
 _extraArgs params [["_placedAED",objNull]];
+
+if (_patient getVariable [QGVAR(DefibrillatorPads_Connected), false]) exitWith {};
 
 private _provider = objNull;
 private _soundSource = _medic;
@@ -51,7 +53,7 @@ switch (_source) do {
 
         [{ // Remove pads if patient gets too far
             params ["_medic", "_patient", "_provider"];
-        
+
             (_patient distance _provider) > GVAR(Defibrillator_DistanceLimit) || !(isNull (objectParent _patient));
         }, {
             params ["_medic", "_patient", "_provider"];
@@ -73,7 +75,7 @@ switch (_source) do {
 
         [{ // Remove pads if patient exits vehicle
             params ["_medic", "_patient", "_provider"];
-        
+
             !((objectParent _patient) isEqualTo _provider);
         }, {
             params ["_medic", "_patient", "_provider"];
@@ -94,7 +96,7 @@ switch (_source) do {
 
         [{ // Remove pads if patient gets too far
             params ["_medic", "_patient"];
-        
+
             (_patient distance _medic) > GVAR(Defibrillator_DistanceLimit) || !((objectParent _medic) isEqualTo (objectParent _patient));
         }, {
             params ["_medic", "_patient"];

@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: DiGi
  * Initalizes the "Manage Airways" Zeus module.
@@ -15,13 +15,13 @@
  * Public: No
  */
 
-params ["_control"]; 
+params ["_control"];
 
 private _display = ctrlParent _control;
 private _ctrlButtonOK = _display displayCtrl 1;
 private _logic = GETMVAR(BIS_fnc_initCuratorAttributes_target,objNull);
 
-_control ctrlRemoveAllEventHandlers "setFocus";
+_control ctrlRemoveAllEventHandlers "SetFocus";
 
 
 private _unit = attachedTo _logic;
@@ -71,10 +71,10 @@ _slider ctrlAddEventHandler ["SliderPosChanged", _fnc_sliderMove];
 
 private _playerBloodyType = _unit getVariable [QEGVAR(circulation,bloodtype), "O_N"];
 private _playerBloodyTypeIndex = ["O","O_N","A","A_N","B","B_N","AB","AB_N"] find _playerBloodyType;
-private _select = switch (_playerBloodyType) do 
+private _select = switch (_playerBloodyType) do
 {
-    case "O+":  {0};
-    case "O-":  {1};
+    case "0+":  {0};
+    case "0-":  {1};
     case "A+":  {2};
     case "A-":  {3};
     case "B+":  {4};
@@ -101,8 +101,8 @@ private _fnc_onConfirm = {
     private _dogtagData = _unit getVariable QACEGVAR(dogtags,dogtagData);
     if(!isNil "_dogtagData") then {
         switch (_bloodtype) do {
-            case "O": {_bloodtype = "O+"};
-            case "O_N": {_bloodtype = "O-"};
+            case "O": {_bloodtype = "0+"};
+            case "O_N": {_bloodtype = "0-"};
             case "A": {_bloodtype = "A+"};
             case "A_N": {_bloodtype = "A-"};
             case "B": {_bloodtype = "B+"};
@@ -118,5 +118,5 @@ private _fnc_onConfirm = {
     _unit setVariable [QACEGVAR(medical,bloodvolume), ( parseNumber (_sliderValue toFixed 2)), true];
 };
 
-_display displayAddEventHandler ["unload", _fnc_onUnload];
-_ctrlButtonOK ctrlAddEventHandler ["buttonclick", _fnc_onConfirm];
+_display displayAddEventHandler ["Unload", _fnc_onUnload];
+_ctrlButtonOK ctrlAddEventHandler ["ButtonClick", _fnc_onConfirm];

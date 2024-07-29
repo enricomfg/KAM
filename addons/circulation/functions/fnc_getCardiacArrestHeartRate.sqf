@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Generate heart rate for type of cardiac arrest
@@ -17,7 +17,7 @@
 
 params ["_unit"];
 
-/* type 
+/* type
 0 normal
 1 asystole, no pulse, no shock
 2 pulseless electrical activity, AEDX fake pulse, no shock
@@ -25,9 +25,11 @@ params ["_unit"];
 4 ventricular tachycardia, fast pulse, shock
 */
 
+if !(alive _unit) exitWith {0};
+
 switch (_unit getVariable [QGVAR(cardiacArrestType), 0]) do {
     case 4: {
-         round (random [200, 220, 240]);
+        round (random [200, 220, 240]);
     };
     case 3: {
         round (random [150, 170, 200]);

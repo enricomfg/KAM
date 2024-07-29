@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Check if defibrillator can be used on patient.
@@ -37,4 +37,4 @@ switch (_defibProvider select 1) do {
     };
 };
 
-_condition && (_allowInUse || !(_patient getVariable [QGVAR(DefibrillatorInUse), false])) && _patient getVariable [QGVAR(DefibrillatorPads_Connected), false] && {!(_patient getVariable [QEGVAR(airway,recovery), false]) && {["",_patient] call ACEFUNC(medical_treatment,canCPR)}};
+_condition && (_allowInUse || !(_patient getVariable [QGVAR(DefibrillatorInUse), false])) && _patient getVariable [QGVAR(DefibrillatorPads_Connected), false] && {["",_patient] call ACEFUNC(medical_treatment,canCPR)};

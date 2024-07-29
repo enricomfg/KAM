@@ -1,4 +1,4 @@
-#include "script_component.hpp"
+#include "..\script_component.hpp"
 /*
  * Author: Blue
  * Updates blood pressure change.
@@ -13,7 +13,7 @@
  * Nothing
  *
  * Example:
- * [player, -15, -15, "ptx_tension"] call kat_circulation_fnc_updateBloodPressureChange
+ * [player, -12, -12, "ptx_tension"] call kat_circulation_fnc_updateBloodPressureChange
  *
  * Public: No
  */
